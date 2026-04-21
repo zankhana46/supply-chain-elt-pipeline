@@ -20,76 +20,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          pip install dbt-core dbt-duckdb duckdb pandas pyarrow requests
+        run: pip install dbt-core dbt-duckdb duckdb pandas pyarrow requests
 
-      - name: Create seed data and load to DuckDB
-        run: |
-          python -c "
-          import duckdb, os
-          os.makedirs('data/warehouse', exist_ok=True)
-          con = duckdb.connect('data/warehouse/supply_chain.duckdb')
-          con.execute('CREATE SCHEMA IF NOT EXISTS raw')
-          con.execute('''
-            CREATE TABLE raw.supply_chain AS
-            SELECT
-              ''Type'' as \"Type\",
-              3 as \"Days for shipping (real)\",
-              4 as \"Days for shipment (scheduled)\",
-              10.5 as \"Benefit per order\",
-              150.0 as \"Sales per customer\",
-              ''Late delivery'' as \"Delivery Status\",
-              1 as \"Late_delivery_risk\",
-              1 as \"Category Id\",
-              ''Fitness'' as \"Category Name\",
-              ''Boston'' as \"Customer City\",
-              ''Estados Unidos'' as \"Customer Country\",
-              ''test@test.com'' as \"Customer Email\",
-              ''John'' as \"Customer Fname\",
-              1 as \"Customer Id\",
-              ''Doe'' as \"Customer Lname\",
-              ''pass'' as \"Customer Password\",
-              ''Consumer'' as \"Customer Segment\",
-              ''Massachusetts'' as \"Customer State\",
-              ''123 Main St'' as \"Customer Street\",
-              02101.0 as \"Customer Zipcode\",
-              1 as \"Department Id\",
-              ''Fitness'' as \"Department Name\",
-              42.36 as \"Latitude\",
-              -71.06 as \"Longitude\",
-              ''US'' as \"Market\",
-              ''Boston'' as \"Order City\",
-              ''Estados Unidos'' as \"Order Country\",
-              1 as \"Order Customer Id\",
-              ''1/15/2018 10:00'' as \"order date (DateOrders)\",
-              1 as \"Order Id\",
-              1 as \"Order Item Cardprod Id\",
-              5.0 as \"Order Item Discount\",
-              0.05 as \"Order Item Discount Rate\",
-              1 as \"Order Item Id\",
-              50.0 as \"Order Item Product Price\",
-              0.20 as \"Order Item Profit Ratio\",
-              2 as \"Order Item Quantity\",
-              100.0 as \"Sales\",
-              95.0 as \"Order Item Total\",
-              10.5 as \"Order Profit Per Order\",
-              ''East'' as \"Order Region\",
-              ''Massachusetts'' as \"Order State\",
-              ''Complete'' as \"Order Status\",
-              02101.0 as \"Order Zipcode\",
-              1 as \"Product Card Id\",
-              1 as \"Product Category Id\",
-              NULL as \"Product Description\",
-              ''img.jpg'' as \"Product Image\",
-              ''Treadmill'' as \"Product Name\",
-              50.0 as \"Product Price\",
-              0 as \"Product Status\",
-              ''1/18/2018 10:00'' as \"shipping date (DateOrders)\",
-              ''Standard Class'' as \"Shipping Mode\"
-          ''')
-          con.close()
-          print('Seed data loaded')
-          "
+      - name: Create seed data
+        run: python tests/create_seed_data.py
 
       - name: Run dbt
         run: |
