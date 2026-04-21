@@ -116,3 +116,11 @@ docker compose up airflow-webserver airflow-scheduler
 ## Dataset
 
 [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) — 180K+ order records with customer, product, shipping, and financial data across multiple global markets.
+
+## Challenges & Solutions
+
+- **Geography dimension duplicates:** Initial `SELECT DISTINCT` produced 3,447 duplicate geography keys because the same city had varying lat/long coordinates across orders. Fixed by grouping on location identifiers and averaging coordinates.
+
+- **dbt schema naming:** dbt's default behavior concatenates custom schemas with the target schema (e.g., `marts_staging`). Resolved with a custom `generate_schema_name` macro — a common production pattern.
+
+- **DuckDB concurrency in Airflow:** The load step failed on first attempt due to a DuckDB file lock. Handled with Airflow's built-in retry mechanism (`retries: 1, retry_delay: 5min`).
