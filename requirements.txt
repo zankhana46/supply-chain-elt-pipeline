@@ -1,0 +1,8 @@
+dbt-core==1.9.*
+dbt-duckdb==1.9.*
+duckdb==1.2.*
+requests
+pandas
+pyarrow
+great-expectations==1.3.*
+python-dotenv

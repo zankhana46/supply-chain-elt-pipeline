@@ -1,0 +1,40 @@
+# CI/CD: Runs dbt build + test on every push and pull request.
+# This catches broken models BEFORE they reach production.
+# In a real team, this runs on every PR so bad code never gets merged.
+
+name: dbt CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install dbt-core dbt-duckdb duckdb pandas pyarrow requests
+
+      - name: Run extract
+        run: python extract/extract_supply_chain.py
+
+      - name: Run load
+        run: python load/load_to_duckdb.py
+
+      - name: Run dbt
+        run: |
+          cd dbt_project/supply_chain
+          dbt run --profiles-dir .
+          dbt test --profiles-dir .

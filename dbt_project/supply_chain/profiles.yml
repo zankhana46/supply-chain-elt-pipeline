@@ -1,0 +1,7 @@
+supply_chain:
+  outputs:
+    dev:
+      type: duckdb
+      path: ../../data/warehouse/supply_chain.duckdb
+      schema: marts
+  target: dev

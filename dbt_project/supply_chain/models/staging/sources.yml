@@ -1,0 +1,12 @@
+# sources.yml tells dbt: "this table already exists in the database, 
+# I didn't create it, but I want to reference it in my models."
+# This is our raw.supply_chain table from Layer 2.
+
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: supply_chain
+        description: "Raw DataCo supply chain data loaded from Parquet. One row per order line item."

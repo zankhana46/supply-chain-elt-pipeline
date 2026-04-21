@@ -1,0 +1,8 @@
+.venv-supply-chain/
+data/raw/*.csv
+data/warehouse/*.duckdb
+__pycache__/
+*.pyc
+.env
+dbt_project/target/
+dbt_project/logs/

@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: fact_order_items
+    description: "One row per order line item. Central fact table of the star schema."
+    columns:
+      - name: order_item_id
+        description: "Unique identifier for each line item"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "FK to dim_customer"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+      - name: product_id
+        description: "FK to dim_product"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+      - name: geography_id
+        description: "FK to dim_geography"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_geography')
+              field: geography_id
+      - name: shipping_id
+        description: "FK to dim_shipping"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_shipping')
+              field: shipping_id
+      - name: quantity
+        description: "Number of items ordered"
+        tests:
+          - not_null
+      - name: sales
+        description: "Revenue from this line item"
+        tests:
+          - not_null
+
+  - name: dim_customer
+    description: "One row per unique customer"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_product
+    description: "One row per unique product"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_geography
+    description: "One row per unique shipping destination"
+    columns:
+      - name: geography_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_shipping
+    description: "One row per shipping mode + status combination"
+    columns:
+      - name: shipping_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_date
+    description: "Calendar dimension"
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
